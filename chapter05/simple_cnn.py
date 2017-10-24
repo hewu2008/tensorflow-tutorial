@@ -66,4 +66,5 @@ if __name__ == "__main__":
                                                       y_ : batch[1],
                                                       keep_prob : 1.0})
             print("step %d, training accuary %g" %(i, train_accuracy))
-        train_step.run(feed_dict = {x : mnist.test.im})
+        train_step.run(feed_dict = {x : mnist.test.images,
+                                    y_ : mnist.test.labels, keep_prob : 1.0})
