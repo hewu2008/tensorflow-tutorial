@@ -2,7 +2,7 @@
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 
-
+#  标准的正态分布，标准差为0.1
 def weight_variables(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
     return tf.Variable(initial)
@@ -22,14 +22,14 @@ def max_pool_2x2(x):
 
 
 if __name__ == "__main__":
-    mnist = input_data.read_data_set("MNIST_data/", one_hot=True)
+    mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
     sess = tf.InteractiveSession()
 
     x = tf.placeholder(tf.float32, [None, 784])
     y_ = tf.placeholder(tf.float32, [None, 10])
-    x_image = tf.reshape(x, [-1, 28, 28, 1]) # change to 28x28 image, channel is 1
+    x_image = tf.reshape(x, [-1, 28, 28, 1]) # -1代表样本数量不固定
 
-    W_conv1 = weight_variables([5, 5, 1, 32])
+    W_conv1 = weight_variables([5, 5, 1, 32]) #
     b_conv1 = bias_variable([32])
     h_conv1 = tf.nn.relu(conv2d(x, W_conv1) + b_conv1)
     h_pool1 = max_pool_2x2(h_conv1)
@@ -39,14 +39,17 @@ if __name__ == "__main__":
     h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
     h_pool2 = max_pool_2x2(h_conv2)
 
+    # 全连接层
     W_fc1 = weight_variables([7 * 7 * 64, 1024])
     b_fc1 = bias_variable([1024])
-    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
+    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64]) # 变成一维的数据
     h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
+    # dropout
     keep_prob = tf.placeholder(tf.float32)
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
+    # softmax输出层
     W_fc1 = weight_variables([1024, 10])
     b_fc2 = bias_variable([10])
     y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc1) + b_fc2)
@@ -66,5 +69,7 @@ if __name__ == "__main__":
                                                       y_ : batch[1],
                                                       keep_prob : 1.0})
             print("step %d, training accuary %g" %(i, train_accuracy))
-        train_step.run(feed_dict = {x : mnist.test.images,
+        train_step.run(feed_dict={x : batch[0], y_ : batch[1], keep_prob : 0.5})
+
+    train_step.run(feed_dict = {x : mnist.test.images,
                                     y_ : mnist.test.labels, keep_prob : 1.0})
