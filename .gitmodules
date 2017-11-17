@@ -1,0 +1,3 @@
+[submodule "chapter07/lstm"]
+	path = chapter07/lstm
+	url = https://github.com/tensorflow/models.git
