@@ -2,7 +2,6 @@
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 
-#  标准的正态分布，标准差为0.1
 def weight_variables(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
     return tf.Variable(initial)
@@ -27,9 +26,9 @@ if __name__ == "__main__":
 
     x = tf.placeholder(tf.float32, [None, 784])
     y_ = tf.placeholder(tf.float32, [None, 10])
-    x_image = tf.reshape(x, [-1, 28, 28, 1]) # -1代表样本数量不固定
+    x_image = tf.reshape(x, [-1, 28, 28, 1])
 
-    W_conv1 = weight_variables([5, 5, 1, 32]) #
+    W_conv1 = weight_variables([5, 5, 1, 32])
     b_conv1 = bias_variable([32])
     h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
     h_pool1 = max_pool_2x2(h_conv1)
@@ -42,7 +41,7 @@ if __name__ == "__main__":
     # 全连接层
     W_fc1 = weight_variables([7 * 7 * 64, 1024])
     b_fc1 = bias_variable([1024])
-    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64]) # 变成一维的数据
+    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
     # dropout
