@@ -1,3 +1,6 @@
 [submodule "deep-learning"]
 	path = deep-learning
 	url = git@github.com:exacity/deeplearningbook-chinese.git
+[submodule "models"]
+	path = models
+	url = https://github.com/tensorflow/models.git
