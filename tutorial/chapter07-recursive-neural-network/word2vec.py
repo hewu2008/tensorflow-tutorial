@@ -143,7 +143,7 @@ if __name__ == "__main__":
                         for i in range(valid_size):
                             valid_word = reverse_dictionary[valid_examples[i]]
                             top_k = 8
-                            nearest = (-sim[i, :].argsort()[1:top_k+1])
+                            nearest = (-sim[i, :]).argsort()[1:top_k+1]
                             log_str = "Nearest to %s" % valid_word
                             for k in range(top_k):
                                 close_word = reverse_dictionary[nearest[k]]
