@@ -7,6 +7,8 @@ import zipfile
 import numpy as np
 import urllib
 import tensorflow as tf
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
 
 url = "http://mattmahoney.net/dc/"
 vocabulary_size = 50000
@@ -77,6 +79,11 @@ def generate_batch(data, batch_size, num_skips, skip_window):
         buffer.append(data[data_index])
         data_index = (data_index + 1) % len(data)
     return batch, labels
+
+# 打印
+def plot_with_labels(low_dim_embs, labels, filename='tsne.png'):
+    assert low_dim_embs.shape[0] >= len(labels), "More labels than embedings"
+
 
 if __name__ == "__main__":
     filename = maybe_download('text8.zip', 31344016)
