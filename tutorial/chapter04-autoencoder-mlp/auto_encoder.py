@@ -37,7 +37,7 @@ class AdditiveGaussianNosieAutoencoder(object):
         all_weights = dict()
         all_weights['w1'] = tf.Variable(xavier_init(self.n_input, self.n_hidden))
         all_weights['b1'] = tf.Variable(tf.zeros([self.n_hidden], dtype=tf.float32))
-        all_weights['w2'] = tf.Variable(tf.zeros([self.n_hidden, self.n_hidden], dtype=tf.float32))
+        all_weights['w2'] = tf.Variable(tf.zeros([self.n_hidden, self.n_input], dtype=tf.float32))
         all_weights['b2'] = tf.Variable(tf.zeros([self.n_input], dtype=tf.float32))
         return all_weights
 
@@ -99,4 +99,5 @@ if __name__ == "__main__":
             avg_cost += cost / n_samples * batch_size
         if epoch % display_step == 0:
             print("Epoch:", "%04d" % (epoch + 1), "cost=", "{:.9f}".format(avg_cost))
-        print("Total Cost: " + str(auto_encoder.calc_total_cost(X_test)))
+
+    print("Total Cost: " + str(auto_encoder.calc_total_cost(X_test)))
