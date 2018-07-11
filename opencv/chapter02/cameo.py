@@ -2,17 +2,22 @@
 
 import cv2
 from opencv.chapter02.managers import WindowManager, CaptureManager
+from opencv.chapter03.filters import *
+from opencv.chapter03.stroke_edge import *
 
 class Cameo(object):
     def __init__(self):
         self._windowManager = WindowManager("Cameo", self.onKeypress)
         self._captureManager = CaptureManager(cv2.VideoCapture(0), self._windowManager, True)
+        self._curveFilter = EmbossFilter()
 
     def run(self):
         self._windowManager.createWindow()
         while self._windowManager.isWindowCreated:
             self._captureManager.enterFrame()
             frame = self._captureManager.frame
+            strokeEdges(frame, frame)
+            self._curveFilter.apply(frame, frame)
             self._captureManager.exitFrame()
             self._windowManager.processEvents()
 
