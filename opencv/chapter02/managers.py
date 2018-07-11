@@ -61,8 +61,8 @@ class CaptureManager(object):
             self._startTime = time.time()
         else:
             timeElapse = time.time() - self._startTime
-        self._fpsEstimate = self._framesElapsed / timeElapse
-        self._framesElapsed += 1
+            self._fpsEstimate = self._framesElapsed / timeElapse
+            self._framesElapsed += 1
 
         if self.previewWindowManager is not None:
             if self.shouldMirrorPreview:
@@ -103,8 +103,9 @@ class CaptureManager(object):
                     return
                 else:
                     fps = self._fpsEstimate
-            size = (int(self._capture.get(cv2.CAP_PROP_FRAME_WIDTH), int(cv2.CAP_PROP_FRAME_HEIGHT)))
-            self._videoWriter = cv2.VideoWriter(self._videoFilename, self._videoEncoding, fps, size)
+            size = (int(self._capture.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self._capture.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+            if self._videoWriter is None:
+                self._videoWriter = cv2.VideoWriter(self._videoFilename, self._videoEncoding, fps, size)
             self._videoWriter.write(self.frame)
 
 class WindowManager(object):
