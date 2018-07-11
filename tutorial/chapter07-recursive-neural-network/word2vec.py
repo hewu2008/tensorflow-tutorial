@@ -14,6 +14,7 @@ url = "http://mattmahoney.net/dc/"
 vocabulary_size = 50000
 data_index = 0
 
+
 def maybe_download(filename, expected_bytes):
     dest_filename = '../text_data/' + filename
     if not os.path.exists(dest_filename):
@@ -53,6 +54,7 @@ def build_dataset(words):
     reverse_directory = dict(zip(dictionary.values(), dictionary.keys()))
     return data, count, dictionary, reverse_directory
 
+
 # skip_window 单词最远可以联系的距离
 # num_skip 每个单词生成的样本数量
 def generate_batch(data, batch_size, num_skips, skip_window):
@@ -79,6 +81,7 @@ def generate_batch(data, batch_size, num_skips, skip_window):
         buffer.append(data[data_index])
         data_index = (data_index + 1) % len(data)
     return batch, labels
+
 
 # 打印
 def plot_with_labels(low_dim_embs, labels, filename='tsne.png'):
@@ -150,10 +153,10 @@ if __name__ == "__main__":
                         for i in range(valid_size):
                             valid_word = reverse_dictionary[valid_examples[i]]
                             top_k = 8
-                            nearest = (-sim[i, :]).argsort()[1:top_k+1]
+                            nearest = (-sim[i, :]).argsort()[1:top_k + 1]
                             log_str = "Nearest to %s" % valid_word
                             for k in range(top_k):
                                 close_word = reverse_dictionary[nearest[k]]
-                                log_str = "%s %s," %(log_str, close_word)
+                                log_str = "%s %s," % (log_str, close_word)
                             print(log_str)
                 final_embedings = normalized_embedings.eval()

@@ -11,3 +11,4 @@ def cnn_model_fn(feature, lables, mode):
     # Convolutional Layer #1
     conv1 = tf.layers.conv2d(inputs=input_layer, filters=32, kernel_size=[5,5],
                              padding='same', activation=tf.nn.relu)
+

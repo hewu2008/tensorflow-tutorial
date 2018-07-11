@@ -1,4 +1,4 @@
-#encoding:utf8
+# encoding:utf8
 
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
@@ -8,7 +8,7 @@ if __name__ == "__main__":
     sess = tf.InteractiveSession()
     in_unit = 784
     h1_unit = 300
-    W1 = tf.Variable(tf.truncated_normal([in_unit, h1_unit], stddev = 0.1))
+    W1 = tf.Variable(tf.truncated_normal([in_unit, h1_unit], stddev=0.1))
     b1 = tf.Variable(tf.zeros([h1_unit]))
     W2 = tf.Variable(tf.zeros([h1_unit, 10]))
     b2 = tf.Variable(tf.zeros([10]))
@@ -31,5 +31,4 @@ if __name__ == "__main__":
     for i in range(3000):
         batch_xs, batch_ys = mnist.train.next_batch(100)
         train_step.run({x: batch_xs, y_: batch_ys, keep_prob: 0.75})
-
     print(accuracy.eval({x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))

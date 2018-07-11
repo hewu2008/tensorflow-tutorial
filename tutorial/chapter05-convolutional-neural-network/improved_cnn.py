@@ -1,13 +1,12 @@
-#encoding:utf8
+# encoding:utf8
 
-import sys
-sys.path.append('../../models/tutorials/image/cifar10')
-import cifar10, cifar10_input
-
-import tensorflow as tf
-import numpy as np
 import time
+
 import math
+import numpy as np
+import tensorflow as tf
+
+from models.tutorials.image.cifar10 import cifar10, cifar10_input
 
 
 def variable_with_weight_loss(shape, stddev, wl):
@@ -17,12 +16,15 @@ def variable_with_weight_loss(shape, stddev, wl):
         tf.add_to_collection('losses', weight_loss)
     return var
 
+
 def loss(logits, labels):
     labels = tf.cast(labels, tf.int64)
-    cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels, name='cross_entropy_per_example')
+    cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels,
+                                                                   name='cross_entropy_per_example')
     cross_entropy_mean = tf.reduce_mean(cross_entropy, name='cross_entropy')
     tf.add_to_collection('losses', cross_entropy_mean)
     return tf.add_n(tf.get_collection('losses'), name='total_loss')
+
 
 if __name__ == "__main__":
     max_steps = 3000
@@ -42,7 +44,7 @@ if __name__ == "__main__":
     kernel1 = tf.nn.conv2d(image_holder, weight1, [1, 1, 1, 1], padding='SAME')
     bias1 = tf.Variable(tf.float32, shape=[64])
     conv1 = tf.nn.relu(tf.nn.bias_add(kernel1, bias1))
-    pool1 = tf.nn.max_pool(conv1, ksize=[1, 3, 3, 1], strides=[1, 2, 2,1 ], padding='SAME')
+    pool1 = tf.nn.max_pool(conv1, ksize=[1, 3, 3, 1], strides=[1, 2, 2, 1], padding='SAME')
     norm1 = tf.nn.lrn(pool1, 4, bias=1.0, alpha=0.001 / 9.0, beta=0.75)
 
     # conv2
@@ -66,7 +68,7 @@ if __name__ == "__main__":
     local4 = tf.nn.relu(tf.matmul(local3, weight4) + bias4)
 
     # output
-    weight5= variable_with_weight_loss(shape=[192, 10], stddev=1/192.0, wl=0.0)
+    weight5 = variable_with_weight_loss(shape=[192, 10], stddev=1 / 192.0, wl=0.0)
     bias5 = tf.Variable(tf.constant(0.0, shape=[10]))
     logits = tf.add(tf.matmul(local4, weight5), bias5)
 
@@ -88,8 +90,8 @@ if __name__ == "__main__":
         if step % 10 == 0:
             examples_per_sec = batch_size / duration
             sec_per_batch = float(duration)
-            format_str = ('step %d, loss=%.2f (%.1f examples/sec; %.3f sec/batch)')
-            print (format_str %(step, loss_value, examples_per_sec, sec_per_batch))
+            format_str = 'step %d, loss=%.2f (%.1f examples/sec; %.3f sec/batch)'
+            print(format_str % (step, loss_value, examples_per_sec, sec_per_batch))
 
     # test
     num_examples = 10000
