@@ -2,3 +2,4 @@
 **/MNIST_data/
 **/text_data/
 **/logs/
+**/__pycache__/
