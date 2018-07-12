@@ -2,6 +2,7 @@
 # encoding:utf8
 
 import cv2
+import os
 
 
 def generate():
@@ -29,4 +30,10 @@ def generate():
 
 
 if __name__ == "__main__":
-    generate()
+    for i in range(0, 26):
+        fn = "E:/Project/Tensorflow/tutorial/data/result/%d.pgm" % i
+        if os.path.exists(fn):
+            img = cv2.imread(fn, 0)
+            cv2.imshow("%d" %i, img)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
