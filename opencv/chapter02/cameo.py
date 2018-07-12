@@ -16,8 +16,8 @@ class Cameo(object):
         while self._windowManager.isWindowCreated:
             self._captureManager.enterFrame()
             frame = self._captureManager.frame
-            strokeEdges(frame, frame)
-            self._curveFilter.apply(frame, frame)
+            # strokeEdges(frame, frame)
+            # self._curveFilter.apply(frame, frame)
             self._captureManager.exitFrame()
             self._windowManager.processEvents()
 
