@@ -3,7 +3,8 @@
 import cv2
 import numpy as np
 
-data_path = ""
+# http://cogcomp.org/Data/Car/CarData.tar.gz
+data_path = "E:/Project/Tensorflow/tutorial/data/TrainImages"
 
 
 def path(cls, i):
@@ -59,8 +60,8 @@ def predict(fn):
 
 
 if __name__ == "__main__":
-    car = ""
-    not_car = ""
+    car = "E:/Project/Tensorflow/tutorial/data/timg.jpg"
+    not_car = "E:/Project/Tensorflow/tutorial/data/tree.jpg"
 
     car_img = cv2.imread(car)
     not_car_img = cv2.imread(not_car)
@@ -72,9 +73,13 @@ if __name__ == "__main__":
 
     if car_predict[1][0][0] == 1.0:
         cv2.putText(car_img, 'Car Detected', (10, 30), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+    else:
+        cv2.putText(car_img, 'Car Not Detected', (10, 30), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
-    if not_car_predict[1][0][0] == -1.0:
-        cv2.putText(not_car_img, "Car Not detected", (10, 30), font, (0, 0, 255), 2, cv2.LINE_AA)
+    if not_car_predict[1][0][0] == 1.0:
+        cv2.putText(not_car_img, "Car detected", (10, 30), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
+    else:
+        cv2.putText(not_car_img, "Car Not detected", (10, 30), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
 
     cv2.imshow("BOW + SVM success", car_img)
     cv2.imshow("BOW + SVM failure", not_car_img)
