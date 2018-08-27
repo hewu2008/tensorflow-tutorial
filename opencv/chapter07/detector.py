@@ -59,9 +59,10 @@ def non_max_supression_fast(boxes, overlapThresh):
 
         idxs = np.delete(idxs, np.concatenate(([last], np.where(overlap > overlapThresh)[0])))
 
+    return boxes[pick].astype('int')
 
 data_path = "E:/Project/Tensorflow/tutorial/data/TrainImages"
-SAMPLES = 100
+SAMPLES = 400
 
 
 def path(cls, i):
@@ -95,7 +96,7 @@ def car_detector():
     detect, extract = get_extract_detect()
     flann = get_flann_matcher()
     print("Building BOWKMeansTrainer...")
-    bow_kmeans_trainer = cv2.BOWKMeansTrainer(100)
+    bow_kmeans_trainer = cv2.BOWKMeansTrainer(500)
     extract_bow = cv2.BOWImgDescriptorExtractor(extract, flann)
 
     print("adding features to trainer")
@@ -137,8 +138,8 @@ if __name__ == "__main__":
     svm, extractor = car_detector()
     detect = cv2.xfeatures2d.SIFT_create()
 
-    w, h = 200, 200
-    img = cv2.imread(test_image)
+    w, h = 100, 40
+    img = cv2.imread(test_image, 0)
 
     rectangle = []
     counter = 1
@@ -146,26 +147,25 @@ if __name__ == "__main__":
     scale = 1
     font = cv2.FONT_HERSHEY_PLAIN
 
-    for resized in pyramid(img, scaleFactor):
-        print('resized: %d, %d' % (resized.shape[0], resized.shape[1]))
-        scale = float(img.shape[1]) / float(resized.shape[1])
-        for (x, y, roi) in sliding_window(resized, 100, (w, h)):
-            print('%d, %d, roi(%d, %d)' % (x, y, roi.shape[0], roi.shape[1]))
-            if roi.shape[1] != w or roi.shape[0] != h:
-                continue
-            try:
-                bf = bow_features(roi, extractor, detect)
-                _, result = svm.predict(bf)
-                a, res = svm.predict(bf, flags = cv2.ml.STAT_MODEL_RAW_OUTPUT)
-                print("Class %d, Score: %f" % (result[0][0], res[0][0]))
-                score = res[0][0]
-                if result[0][0] == 1:
-                    if score < -1.0:
-                        rx, ry, rx2, ry2 = int(x * scale), int(y * scale), int((x+w)*scale), int((y+h)*scale)
-                        rectangle.append([rx, ry, rx2, ry2, abs(score)])
-            except:
-                pass
-            counter += 1
+    resized = img
+    scale = float(img.shape[1]) / float(resized.shape[1])
+    print("scale is: %f" % scale)
+    for (x, y, roi) in sliding_window(resized, 20, (w, h)):
+        print('%d, %d, roi(%d, %d)' % (x, y, roi.shape[0], roi.shape[1]))
+        if roi.shape[1] != w or roi.shape[0] != h:
+            continue
+        try:
+            bf = bow_features(roi, extractor, detect)
+            _, result = svm.predict(bf)
+            a, res = svm.predict(bf, flags=cv2.ml.STAT_MODEL_RAW_OUTPUT)
+            print("Class %d, Score: %f" % (result[0][0], res[0][0]))
+            score = res[0][0]
+            if result[0][0] == 1:
+                if score < -1.0:
+                    rx, ry, rx2, ry2 = int(x * scale), int(y * scale), int((x + w) * scale), int((y + h) * scale)
+                    rectangle.append([rx, ry, rx2, ry2, abs(score)])
+        except:
+            print('exception')
 
     windows = np.array(rectangle)
     boxes = non_max_supression_fast(windows, 0.25)
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     for (x, y, x2, y2, score) in boxes:
         print(x, y, x2, y2, score)
         cv2.rectangle(img, (int(x), int(y)), (int(x2), int(y2)), (0, 255, 0), 1)
-        cv2.putText(img, "%f" % score, (int(x), int(y)), (int(x2), int(y2)), (0, 255, 0), 0)
+        cv2.putText(img, "%f" % score, (int(x), int(y)), font, 1, (0, 255, 0))
 
     cv2.imshow("img", img)
     cv2.waitKey()
